@@ -32,7 +32,7 @@ Optional requirements if you want to use the native php-gettext extension:
 Once it's installed, Laravel will discover automatically the provider and load it. (Only for 5.5+)
 
 ```bash
-    composer require zerospam/laravel-gettext
+    composer require vadikv/laravel-gettext
 ```
 
 
