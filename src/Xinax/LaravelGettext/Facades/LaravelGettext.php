@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 namespace Xinax\LaravelGettext\Facades;
 
 use Illuminate\Support\Facades\Facade;
- 
+
 class LaravelGettext extends Facade
 {
     /**
@@ -11,8 +11,8 @@ class LaravelGettext extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
-        return  \Xinax\LaravelGettext\LaravelGettext::class;
+        return \Xinax\LaravelGettext\LaravelGettext::class;
     }
 }

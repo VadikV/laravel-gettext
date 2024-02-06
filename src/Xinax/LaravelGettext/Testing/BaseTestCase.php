@@ -1,14 +1,9 @@
 <?php namespace Xinax\LaravelGettext\Testing;
 
-use \Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Testing\TestCase;
 use Xinax\LaravelGettext\LaravelGettextServiceProvider;
 
-/**
- * Created by PhpStorm.
- * User: shaggyz
- * Date: 17/10/16
- * Time: 14:41
- */
 class BaseTestCase extends TestCase
 {
     /**
@@ -16,14 +11,14 @@ class BaseTestCase extends TestCase
      *
      * @var string
      */
-    protected $appPath;
+    protected string $appPath = '';
 
     /**
      * Instantiates the laravel environment.
      *
      * @return mixed
      */
-    public function createApplication()
+    public function createApplication(): mixed
     {
         // relative path in package folder
         if (!$this->appPath) {
@@ -31,7 +26,7 @@ class BaseTestCase extends TestCase
         }
 
         $app = require $this->appPath;
-        $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $app->make(Kernel::class)->bootstrap();
 
         $app->register(LaravelGettextServiceProvider::class);
 

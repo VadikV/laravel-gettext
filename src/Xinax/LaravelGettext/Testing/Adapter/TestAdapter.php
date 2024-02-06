@@ -12,17 +12,14 @@ use Xinax\LaravelGettext\Adapters\AdapterInterface;
 
 class TestAdapter implements AdapterInterface
 {
-    /**
-     * @var string
-     */
-    private $locale = 'en_US';
+    private string $locale = 'en_US';
 
     /**
      * Get the current locale
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -34,7 +31,7 @@ class TestAdapter implements AdapterInterface
      *
      * @return boolean
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): bool
     {
         $this->locale = $locale;
 
@@ -46,7 +43,7 @@ class TestAdapter implements AdapterInterface
      *
      * @return string
      */
-    public function getApplicationPath()
+    public function getApplicationPath(): string
     {
         return app_path();
     }

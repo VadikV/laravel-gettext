@@ -5,7 +5,10 @@
  * Date: 03/02/17
  * Time: 10:10 AM
  */
+
 namespace Xinax\LaravelGettext\Storages;
+
+use Xinax\LaravelGettext\Config\Models\Config;
 
 interface Storage
 {
@@ -14,47 +17,47 @@ interface Storage
      *
      * @return String
      */
-    public function getDomain();
+    public function getDomain(): string;
 
     /**
      * @param string $domain
      *
      * @return $this
      */
-    public function setDomain($domain);
+    public function setDomain(string $domain): static;
 
     /**
      * Getter for locale
      *
      * @return String
      */
-    public function getLocale();
+    public function getLocale(): string;
 
     /**
      * @param string $locale
      *
      * @return $this
      */
-    public function setLocale($locale);
+    public function setLocale(string $locale): static;
 
     /**
      * Getter for locale
      *
      * @return String
      */
-    public function getEncoding();
+    public function getEncoding(): string;
 
     /**
      * @param string $encoding
      *
      * @return $this
      */
-    public function setEncoding($encoding);
+    public function setEncoding(string $encoding): static;
 
     /**
      * Getter for configuration
      *
-     * @return \Xinax\LaravelGettext\Config\Models\Config
+     * @return Config
      */
-    public function getConfiguration();
+    public function getConfiguration(): Config;
 }

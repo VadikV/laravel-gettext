@@ -7,15 +7,15 @@ if (!function_exists('_i')) {
      * Translate a formatted string based on printf formats
      * Can be use an array on args or use the number of the arguments
      *
-     * @param  string      $message the message to translate
-     * @param  array|mixed $args    the tokens values used inside the $message
+     * @param string $message the message to translate
+     * @param mixed|null $args the tokens values used inside the $message
      *
      * @return string the message translated and formatted
      */
-    function _i($message, $args = null)
+    function _i(string $message, mixed $args = null): string
     {
 
-        $translator  = app(LaravelGettext::class);
+        $translator = app(LaravelGettext::class);
         $translation = $translator->translate($message);
 
         if (strlen($translation)) {
@@ -44,12 +44,12 @@ if (!function_exists('__')) {
      * Translate a formatted string based on printf formats
      * Can be use an array on args or use the number of the arguments
      *
-     * @param  string      $message the message to translate
-     * @param  array|mixed $args    the tokens values used inside the $message
+     * @param string $message the message to translate
+     * @param mixed|null $args the tokens values used inside the $message
      *
      * @return string the message translated and formatted
      */
-    function __($message, $args = null)
+    function __(string $message, mixed $args = null): string
     {
         return _i($message, $args);
     }
@@ -60,10 +60,10 @@ if (!function_exists('_')) {
      * Generic translation function
      *
      * @param $message
-     *
-     * @return mixed
+     * @param null $args
+     * @return string
      */
-    function _($message, $args = null)
+    function _($message, $args = null): string
     {
         return _i($message, $args);
     }
@@ -74,24 +74,22 @@ if (!function_exists('_n')) {
      * Translate a formatted pluralized string based on printf formats
      * Can be use an array on args or use the number of the arguments
      *
-     * @param  string      $singular the singular message to be translated
-     * @param  string      $plural   the plural message to be translated if the $count > 1
-     * @param  int         $count    the number of occurrence to be used to pluralize the $singular
-     * @param  array|mixed $args     the tokens values used inside $singular or $plural
+     * @param string $singular the singular message to be translated
+     * @param string $plural the plural message to be translated if the $count > 1
+     * @param int $count the number of occurrence to be used to pluralize the $singular
+     * @param mixed|null $args the tokens values used inside $singular or $plural
      *
      * @return string the message translated, pluralized and formatted
      */
-    function _n($singular, $plural, $count, $args = null)
+    function _n(string $singular, string $plural, int $count, mixed $args = null): string
     {
         $translator = app(LaravelGettext::class);
-        $message    = $translator->translatePlural($singular, $plural, $count);
+        $message = $translator->translatePlural($singular, $plural, $count);
 
         if (isset($args) && !is_array($args)) {
             $args = array_slice(func_get_args(), 3);
         }
-        $message = vsprintf($message, $args);
-
-        return $message;
+        return vsprintf($message, $args);
     }
 }
 
@@ -102,23 +100,21 @@ if (!function_exists('_s')) {
      *
      * <b>Only works if Symfony is the used backend</b>
      *
-     * @param  string      $message  The one line message containing the different pluralization separated by pipes
+     * @param string $message The one line message containing the different pluralization separated by pipes
      *                               See Symfony translation documentation
-     * @param  int         $count    the number of occurrence to be used to pluralize the $singular
-     * @param  array|mixed $args     the tokens values used inside $singular or $plural
+     * @param int $count the number of occurrence to be used to pluralize the $singular
+     * @param mixed|null $args the tokens values used inside $singular or $plural
      *
      * @return string the message translated, pluralized and formatted
      */
-    function _s($message, $count, $args = null)
+    function _s(string $message, int $count, mixed $args = null): string
     {
         $translator = app(LaravelGettext::class);
-        $message    = $translator->getTranslator()->translatePluralInline($message, $count);
+        $message = $translator->getTranslator()->translatePluralInline($message, $count);
 
         if (isset($args) && !is_array($args)) {
             $args = array_slice(func_get_args(), 3);
         }
-        $message = vsprintf($message, $args);
-
-        return $message;
+        return vsprintf($message, $args);
     }
 }

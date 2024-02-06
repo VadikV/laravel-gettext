@@ -2,28 +2,21 @@
 
 namespace Xinax\LaravelGettext\Commands;
 
+use Exception;
+use Xinax\LaravelGettext\Exceptions\RequiredConfigurationKeyException;
+
 class GettextCreate extends BaseCommand
 {
 
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
     protected $name = 'gettext:create';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description =
         'Generates the initial directories and files for laravel-gettext.';
 
     /**
-     * Execute the console command
+     * @throws RequiredConfigurationKeyException
      */
-    public function handle()
+    public function handle(): int
     {
         $this->prepare();
 
@@ -49,28 +42,11 @@ class GettextCreate extends BaseCommand
 
             $this->info($msg);
 
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $this->error($e->getFile() . ":" . $e->getLine() . " - " . $e->getMessage());
         }
-    }
 
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [];
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [];
+        return 0;
     }
 }

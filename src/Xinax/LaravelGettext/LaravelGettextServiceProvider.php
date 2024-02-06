@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Xinax\LaravelGettext\Adapters\AdapterInterface;
 use Xinax\LaravelGettext\Config\ConfigManager;
 use Xinax\LaravelGettext\Config\Models\Config;
+use Xinax\LaravelGettext\Exceptions\RequiredConfigurationFileException;
 
 /**
  * Main service provider
@@ -19,18 +20,11 @@ use Xinax\LaravelGettext\Config\Models\Config;
 class LaravelGettextServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Bootstrap the application events.
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/../../config/config.php' => config_path('laravel-gettext.php')
@@ -41,9 +35,9 @@ class LaravelGettextServiceProvider extends ServiceProvider
     /**
      * Register the service provider.
      *
-     * @return mixed
+     * @throws RequiredConfigurationFileException
      */
-    public function register()
+    public function register(): void
     {
         $configuration = ConfigManager::create();
 
@@ -52,7 +46,7 @@ class LaravelGettextServiceProvider extends ServiceProvider
             $configuration->get()->getAdapter()
         );
 
-        $this->app->singleton(Config::class, function($app) use ($configuration){
+        $this->app->singleton(Config::class, function () use ($configuration) {
             return $configuration->get();
         });
 
@@ -70,7 +64,8 @@ class LaravelGettextServiceProvider extends ServiceProvider
                     $fileSystem,
                     $storage
                 );
-            } else {
+            }
+            else {
                 // GNU/Gettext php extension
                 $translator = new Translators\Gettext(
                     $configuration->get(),
@@ -83,6 +78,7 @@ class LaravelGettextServiceProvider extends ServiceProvider
             return new LaravelGettext($translator);
 
         });
+
         $this->app->alias(LaravelGettext::class, 'laravel-gettext');
 
         // Alias
@@ -97,14 +93,14 @@ class LaravelGettextServiceProvider extends ServiceProvider
     /**
      * Register commands
      */
-    protected function registerCommands()
+    protected function registerCommands(): void
     {
         // Package commands
-        $this->app->bind('xinax::gettext.create', function ($app) {
+        $this->app->bind('xinax::gettext.create', function () {
             return new Commands\GettextCreate();
         });
 
-        $this->app->bind('xinax::gettext.update', function ($app) {
+        $this->app->bind('xinax::gettext.update', function () {
             return new Commands\GettextUpdate();
         });
 
@@ -112,17 +108,5 @@ class LaravelGettextServiceProvider extends ServiceProvider
             'xinax::gettext.create',
             'xinax::gettext.update',
         ]);
-    }
-
-    /**
-     * Get the services
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [
-            'laravel-gettext'
-        ];
     }
 }

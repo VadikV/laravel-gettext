@@ -8,34 +8,21 @@
 
 namespace Xinax\LaravelGettext\Storages;
 
-use Session;
+use Illuminate\Support\Facades\Session;
+use Xinax\LaravelGettext\Config\Models\Config;
 
 class SessionStorage implements Storage
 {
-    /**
-     * Config container
-     *
-     * @type \Xinax\LaravelGettext\Config\Models\Config
-     */
-    protected $configuration;
-
-    /**
-     * SessionStorage constructor.
-     *
-     * @param \Xinax\LaravelGettext\Config\Models\Config $configuration
-     */
-    public function __construct(\Xinax\LaravelGettext\Config\Models\Config $configuration)
+    public function __construct(private readonly Config $configuration)
     {
-        $this->configuration = $configuration;
     }
-
 
     /**
      * Getter for domain
      *
      * @return String
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->sessionGet('domain', $this->configuration->getDomain());
     }
@@ -45,7 +32,7 @@ class SessionStorage implements Storage
      *
      * @return $this
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): static
     {
         $this->sessionSet('domain', $domain);
 
@@ -57,7 +44,7 @@ class SessionStorage implements Storage
      *
      * @return String
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->sessionGet('locale', $this->configuration->getLocale());
     }
@@ -67,7 +54,7 @@ class SessionStorage implements Storage
      *
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->sessionSet('locale', $locale);
 
@@ -77,13 +64,12 @@ class SessionStorage implements Storage
     /**
      * Getter for configuration
      *
-     * @return \Xinax\LaravelGettext\Config\Models\Config
+     * @return Config
      */
-    public function getConfiguration()
+    public function getConfiguration(): Config
     {
         return $this->configuration;
     }
-
 
     /**
      * Return a value from session with an optional default
@@ -93,7 +79,7 @@ class SessionStorage implements Storage
      *
      * @return mixed
      */
-    protected function sessionGet($key, $default = null)
+    protected function sessionGet($key, $default = null): mixed
     {
         $token = $this->configuration->getSessionIdentifier() . "-" . $key;
 
@@ -105,10 +91,9 @@ class SessionStorage implements Storage
      *
      * @param $key
      * @param $value
-     *
-     * @return mixed
+     * @return SessionStorage
      */
-    protected function sessionSet($key, $value)
+    protected function sessionSet($key, $value): static
     {
         $token = $this->configuration->getSessionIdentifier() . "-" . $key;
         Session::put($token, $value);
@@ -121,7 +106,7 @@ class SessionStorage implements Storage
      *
      * @return String
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->sessionGet('encoding', $this->configuration->getEncoding());
     }
@@ -131,7 +116,7 @@ class SessionStorage implements Storage
      *
      * @return $this
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): static
     {
         $this->sessionSet('encoding', $encoding);
 

@@ -12,7 +12,7 @@ class LaravelAdapter implements AdapterInterface
      * @param string $locale
      * @return bool
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): bool
     {
         App::setLocale(substr($locale, 0, 2));
         return true;
@@ -23,7 +23,7 @@ class LaravelAdapter implements AdapterInterface
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return App::getLocale();
     }
@@ -33,8 +33,8 @@ class LaravelAdapter implements AdapterInterface
      *
      * @return string
      */
-    public function getApplicationPath()
+    public function getApplicationPath(): string
     {
-        return app_path();
+        return App::path();
     }
 }

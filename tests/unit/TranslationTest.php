@@ -23,7 +23,7 @@ class TranslationTest extends BaseTestCase
      *
      * @var string
      */
-    protected $appPath = __DIR__ . '/../../vendor/laravel/laravel/bootstrap/app.php';
+    protected string $appPath = __DIR__ . '/../../vendor/laravel/laravel/bootstrap/app.php';
     /**
      * @var FileSystem
      */

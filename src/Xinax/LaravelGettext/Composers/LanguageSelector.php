@@ -8,22 +8,9 @@ use Xinax\LaravelGettext\LaravelGettext;
  */
 class LanguageSelector
 {
-    /**
-     * Labels
-     *
-     * @var array
-     */
-    protected $labels = [];
+    protected array          $labels = [];
+    protected LaravelGettext $gettext;
 
-    /**
-     * @var LaravelGettext
-     */
-    protected $gettext;
-
-    /**
-     * @param LaravelGettext $gettext
-     * @param array $labels
-     */
     public function __construct(LaravelGettext $gettext, array $labels = [])
     {
         $this->labels = $labels;
@@ -35,7 +22,7 @@ class LanguageSelector
      * @param array $labels
      * @return LanguageSelector
      */
-    public static function create(LaravelGettext $gettext, $labels = [])
+    public static function create(LaravelGettext $gettext, array $labels = []): LanguageSelector
     {
         return new LanguageSelector($gettext, $labels);
     }
@@ -44,9 +31,8 @@ class LanguageSelector
      * Renders the language selector
      * @return string
      */
-    public function render()
+    public function render(): string
     {
-        /** @var string $currentLocale */
         $currentLocale = $this->gettext->getLocale();
 
         $html = '<ul class="language-selector">';
@@ -79,7 +65,7 @@ class LanguageSelector
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }

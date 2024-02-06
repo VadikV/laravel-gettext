@@ -1,66 +1,35 @@
 <?php
+/** @noinspection PhpComposerExtensionStubsInspection */
 
 namespace Xinax\LaravelGettext\Translators;
 
-use Xinax\LaravelGettext\FileSystem;
+use Exception;
+use RuntimeException;
 use Xinax\LaravelGettext\Adapters\AdapterInterface;
 use Xinax\LaravelGettext\Config\Models\Config;
 use Xinax\LaravelGettext\Exceptions\LocaleNotSupportedException;
-use Xinax\LaravelGettext\Exceptions\MissingPhpGettextModuleException;
 use Xinax\LaravelGettext\Exceptions\UndefinedDomainException;
-
-use Illuminate\Support\Facades\Session;
+use Xinax\LaravelGettext\FileSystem;
 use Xinax\LaravelGettext\Storages\Storage;
 
 /**
  * Class implemented by the php-gettext module translator
  * @package Xinax\LaravelGettext\Translators
  */
-class Gettext extends BaseTranslator implements TranslatorInterface
+class Gettext extends BaseTranslator
 {
-    /**
-     * Config container
-     * @type \Xinax\LaravelGettext\Config\Models\Config
-     */
-    protected $configuration;
+    protected string $encoding;
+    protected string $locale;
+    protected array  $categories;
+    protected string $domain;
 
     /**
-     * Current encoding
-     * @type String
+     * @throws LocaleNotSupportedException
      */
-    protected $encoding;
-
-    /**
-     * Current locale
-     * @type String
-     */
-    protected $locale;
-
-    /**
-     * Locale categories
-     * @type array
-     */
-    protected $categories;
-
-    /**
-     * Framework adapter
-     * @type \Xinax\LaravelGettext\Adapters\LaravelAdapter
-     */
-    protected $adapter;
-
-    /**
-     * File system helper
-     * @var FileSystem
-     */
-    protected $fileSystem;
-
-    /**
-     * @var String
-     */
-    protected $domain;
-
-    public function __construct(Config $config, AdapterInterface $adapter, FileSystem $fileSystem,
-                                Storage $storage)
+    public function __construct(Config           $config,
+                                AdapterInterface $adapter,
+                                FileSystem       $fileSystem,
+                                Storage          $storage)
     {
         parent::__construct($config, $adapter, $fileSystem, $storage);
 
@@ -82,8 +51,10 @@ class Gettext extends BaseTranslator implements TranslatorInterface
 
     /**
      * Sets the current locale code
+     * @throws LocaleNotSupportedException
+     * @throws Exception
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         if (!$this->isLocaleSupported($locale)) {
             throw new LocaleNotSupportedException(
@@ -96,7 +67,7 @@ class Gettext extends BaseTranslator implements TranslatorInterface
             $gettextLocale = $customLocale . $this->getEncoding();
 
             // Update all categories set in config
-            foreach($this->categories as $category) {
+            foreach ($this->categories as $category) {
                 putenv("$category=$gettextLocale");
                 setlocale(constant($category), $gettextLocale);
             }
@@ -107,23 +78,24 @@ class Gettext extends BaseTranslator implements TranslatorInterface
             if ($this->configuration->isSyncLaravel()) {
                 $this->adapter->setLocale($locale);
             }
-
-            return $this->getLocale();
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $this->locale = $this->configuration->getFallbackLocale();
             $exceptionPosition = $e->getFile() . ":" . $e->getLine();
-            throw new \Exception($exceptionPosition . $e->getMessage());
-
+            throw new Exception($exceptionPosition . $e->getMessage());
         }
+
+        return $this;
     }
 
     /**
      * Returns a boolean that indicates if $locale
      * is supported by configuration
      *
+     * @param string|null $locale
      * @return boolean
      */
-    public function isLocaleSupported($locale)
+    public function isLocaleSupported(?string $locale): bool
     {
         if ($locale) {
             return in_array($locale, $this->supportedLocales());
@@ -134,10 +106,8 @@ class Gettext extends BaseTranslator implements TranslatorInterface
 
     /**
      * Return the current locale
-     *
-     * @return mixed
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getLocale();
     }
@@ -145,10 +115,8 @@ class Gettext extends BaseTranslator implements TranslatorInterface
 
     /**
      * Gets the Current encoding.
-     *
-     * @return mixed
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
@@ -159,7 +127,7 @@ class Gettext extends BaseTranslator implements TranslatorInterface
      * @param mixed $encoding the encoding
      * @return self
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): static
     {
         $this->encoding = $encoding;
         return $this;
@@ -168,21 +136,20 @@ class Gettext extends BaseTranslator implements TranslatorInterface
     /**
      * Sets the current domain and updates gettext domain application
      *
-     * @param   String                      $domain
-     * @throws  UndefinedDomainException    If domain is not defined
+     * @param String $domain
      * @return  self
+     * @throws  UndefinedDomainException    If domain is not defined
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): static
     {
         parent::setDomain($domain);
 
         $customLocale = $this->configuration->getCustomLocale() ? "/" . $this->getLocale() : "";
-        
+
         bindtextdomain($domain, $this->fileSystem->getDomainPath() . $customLocale);
         bind_textdomain_codeset($domain, $this->getEncoding());
 
         $this->domain = textdomain($domain);
-
 
 
         return $this;
@@ -191,9 +158,10 @@ class Gettext extends BaseTranslator implements TranslatorInterface
     /**
      * Translates a message with gettext
      *
-     * @param $message
+     * @param string $message
+     * @return string
      */
-    public function translate($message)
+    public function translate(string $message): string
     {
         return gettext($message);
     }
@@ -201,19 +169,19 @@ class Gettext extends BaseTranslator implements TranslatorInterface
     /**
      * Translates a plural message with gettext
      *
-     * @param $singular
-     * @param $plural
-     * @param $count
+     * @param string $singular
+     * @param string $plural
+     * @param int $count
      *
      * @return string
      */
-    public function translatePlural($singular, $plural, $count)
+    public function translatePlural(string $singular, string $plural, int $count): string
     {
         return ngettext($singular, $plural, $count);
     }
 
-    public function translatePluralInline($message, $amount)
+    public function translatePluralInline($message, $count): string
     {
-        throw new \RuntimeException('Not supported by gettext, please use Symfony');
+        throw new RuntimeException('Not supported by gettext, please use Symfony');
     }
 }

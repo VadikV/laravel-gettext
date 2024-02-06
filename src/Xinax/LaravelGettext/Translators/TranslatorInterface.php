@@ -2,6 +2,7 @@
 
 use Xinax\LaravelGettext\Adapters\AdapterInterface;
 use Xinax\LaravelGettext\Config\Models\Config;
+use Xinax\LaravelGettext\Exceptions\UndefinedDomainException;
 use Xinax\LaravelGettext\FileSystem;
 use Xinax\LaravelGettext\Storages\Storage;
 
@@ -11,55 +12,58 @@ interface TranslatorInterface
     /**
      * Initializes the module translator
      *
-     * @param Config           $config
+     * @param Config $config
      * @param AdapterInterface $adapter
-     * @param FileSystem       $fileSystem
+     * @param FileSystem $fileSystem
      *
-     * @param Storage          $storage
+     * @param Storage $storage
      */
-    public function __construct(
-        Config $config, AdapterInterface $adapter, FileSystem $fileSystem, Storage $storage);
+    public function __construct(Config           $config,
+                                AdapterInterface $adapter,
+                                FileSystem       $fileSystem,
+                                Storage          $storage);
 
     /**
      * Sets the current locale code
      */
-    public function setLocale($locale);
+    public function setLocale(string $locale);
 
     /**
      * Returns the current locale string identifier
      *
      * @return String
      */
-    public function getLocale();
+    public function getLocale(): string;
 
     /**
      * Returns a boolean that indicates if $locale
      * is supported by configuration
      *
+     * @param string|null $locale
      * @return boolean
      */
-    public function isLocaleSupported($locale);
+    public function isLocaleSupported(?string $locale): bool;
 
     /**
      * Returns supported locales
      *
-     * @return array
+     * @return string[]
      */
-    public function supportedLocales();
+    public function supportedLocales(): array;
 
     /**
      * Return the current locale
      *
      * @return mixed
      */
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * Gets the Current encoding.
      *
-     * @return mixed
+     * @return string
      */
-    public function getEncoding();
+    public function getEncoding(): string;
 
     /**
      * Sets the Current encoding.
@@ -68,52 +72,51 @@ interface TranslatorInterface
      *
      * @return self
      */
-    public function setEncoding($encoding);
+    public function setEncoding(string $encoding): static;
 
     /**
      * Sets the current domain and updates gettext domain application
      *
-     * @param   String $domain
+     * @param String $domain
      *
-     * @throws  \Xinax\LaravelGettext\Exceptions\UndefinedDomainException If domain is not defined
      * @return  self
+     * @throws  UndefinedDomainException If domain is not defined
      */
-    public function setDomain($domain);
+    public function setDomain(string $domain): static;
 
     /**
      * Returns the current domain
      *
      * @return String
      */
-    public function getDomain();
+    public function getDomain(): string;
 
     /**
      * Translates a single message
      *
-     * @param $message
-     *
+     * @param string $message
      * @return string
      */
-    public function translate($message);
+    public function translate(string $message): string;
 
     /**
      * Translates a plural string
      *
-     * @param $singular
-     * @param $plural
-     * @param $count
+     * @param string $singular
+     * @param string $plural
+     * @param int $count
      *
      * @return mixed
      */
-    public function translatePlural($singular, $plural, $count);
+    public function translatePlural(string $singular, string $plural, int $count): string;
 
     /**
      * Translate a plural string that is only on one line separated with pipes
      *
-     * @param $message
-     * @param $amount
+     * @param string $message
+     * @param int $count
      *
      * @return string
      */
-    public function translatePluralInline($message, $amount);
+    public function translatePluralInline(string $message, int $count): string;
 }

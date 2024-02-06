@@ -8,50 +8,11 @@ use Xinax\LaravelGettext\Storages\Storage;
 
 abstract class BaseTranslator implements TranslatorInterface
 {
-    /**
-     * Config container
-     *
-     * @type \Xinax\LaravelGettext\Config\Models\Config
-     */
-    protected $configuration;
-
-    /**
-     * Framework adapter
-     *
-     * @type \Xinax\LaravelGettext\Adapters\LaravelAdapter
-     */
-    protected $adapter;
-
-    /**
-     * File system helper
-     *
-     * @var \Xinax\LaravelGettext\FileSystem
-     */
-    protected $fileSystem;
-
-    /**
-     * @var Storage
-     */
-    protected $storage;
-
-
-    /**
-     * Initializes the module translator
-     *
-     * @param Config           $config
-     * @param AdapterInterface $adapter
-     * @param FileSystem       $fileSystem
-     *
-     * @param Storage          $storage
-     */
-    public function __construct(
-        Config $config, AdapterInterface $adapter, FileSystem $fileSystem, Storage $storage)
+    public function __construct(protected readonly Config           $configuration,
+                                protected readonly AdapterInterface $adapter,
+                                protected readonly FileSystem       $fileSystem,
+                                protected readonly Storage          $storage)
     {
-        // Sets the package configuration and session handler
-        $this->configuration = $config;
-        $this->adapter       = $adapter;
-        $this->fileSystem    = $fileSystem;
-        $this->storage       = $storage;
     }
 
     /**
@@ -59,7 +20,7 @@ abstract class BaseTranslator implements TranslatorInterface
      *
      * @return String
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->storage->getLocale();
     }
@@ -67,11 +28,11 @@ abstract class BaseTranslator implements TranslatorInterface
     /**
      * Sets and stores on session the current locale code
      *
-     * @param $locale
+     * @param string $locale
      *
      * @return BaseTranslator
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         if ($locale == $this->storage->getLocale()) {
             return $this;
@@ -86,11 +47,11 @@ abstract class BaseTranslator implements TranslatorInterface
      * Returns a boolean that indicates if $locale
      * is supported by configuration
      *
-     * @param $locale
+     * @param string|null $locale
      *
      * @return bool
      */
-    public function isLocaleSupported($locale)
+    public function isLocaleSupported(?string $locale): bool
     {
         if ($locale) {
             return in_array($locale, $this->configuration->getSupportedLocales());
@@ -102,9 +63,9 @@ abstract class BaseTranslator implements TranslatorInterface
     /**
      * Return the current locale
      *
-     * @return mixed
+     * @return String
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getLocale();
     }
@@ -114,7 +75,7 @@ abstract class BaseTranslator implements TranslatorInterface
      *
      * @return mixed
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->storage->getEncoding();
     }
@@ -126,7 +87,7 @@ abstract class BaseTranslator implements TranslatorInterface
      *
      * @return self
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): static
     {
         $this->storage->setEncoding($encoding);
 
@@ -136,12 +97,12 @@ abstract class BaseTranslator implements TranslatorInterface
     /**
      * Sets the current domain and updates gettext domain application
      *
-     * @param   String $domain
+     * @param String $domain
      *
-     * @throws  UndefinedDomainException    If domain is not defined
      * @return  self
+     * @throws  UndefinedDomainException    If domain is not defined
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): static
     {
         if (!in_array($domain, $this->configuration->getAllDomains())) {
             throw new UndefinedDomainException("Domain '$domain' is not registered.");
@@ -157,7 +118,7 @@ abstract class BaseTranslator implements TranslatorInterface
      *
      * @return String
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->storage->getDomain();
     }
@@ -168,7 +129,7 @@ abstract class BaseTranslator implements TranslatorInterface
      *
      * @return array
      */
-    public function supportedLocales()
+    public function supportedLocales(): array
     {
         return $this->configuration->getSupportedLocales();
     }

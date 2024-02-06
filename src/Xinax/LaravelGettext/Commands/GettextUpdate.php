@@ -3,32 +3,21 @@
 namespace Xinax\LaravelGettext\Commands;
 
 use Exception;
-use Xinax\LaravelGettext\Exceptions\DirectoryNotFoundException;
 use Symfony\Component\Console\Input\InputOption;
+use Xinax\LaravelGettext\Exceptions\DirectoryNotFoundException;
+use Xinax\LaravelGettext\Exceptions\RequiredConfigurationKeyException;
 
 class GettextUpdate extends BaseCommand
 {
 
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
     protected $name = 'gettext:update';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Update PO files (when you modify configuration).';
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @throws RequiredConfigurationKeyException
      */
-    public function handle()
+    public function handle(): int
     {
         $this->prepare();
 
@@ -44,7 +33,7 @@ class GettextUpdate extends BaseCommand
             }
 
             $count = [
-                'added' => 0,
+                'added'   => 0,
                 'updated' => 0,
             ];
 
@@ -101,19 +90,12 @@ class GettextUpdate extends BaseCommand
                 $this->info(sprintf('%s locales updated.', $count['updated']));
             }
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             $this->error($e->getFile() . ":" . $e->getLine() . " = " . $e->getMessage());
         }
-    }
 
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [];
+        return 0;
     }
 
     /**
@@ -121,7 +103,7 @@ class GettextUpdate extends BaseCommand
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             [

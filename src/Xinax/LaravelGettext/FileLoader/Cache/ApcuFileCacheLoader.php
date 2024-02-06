@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aaflalo
- * Date: 18-03-01
- * Time: 10:23
- */
+/** @noinspection PhpComposerExtensionStubsInspection */
 
 namespace Xinax\LaravelGettext\FileLoader\Cache;
 
@@ -14,21 +9,9 @@ use Symfony\Component\Translation\Loader\FileLoader;
 class ApcuFileCacheLoader extends FileLoader
 {
 
-    /**
-     * @var FileLoader
-     */
-    private $underlyingFileLoader;
-
-    /**
-     * ApcuFileCacheLoader constructor.
-     *
-     * @param FileLoader $underlyingFileLoader
-     */
-    public function __construct(FileLoader $underlyingFileLoader)
+    public function __construct(private readonly FileLoader $underlyingFileLoader)
     {
-        $this->underlyingFileLoader = $underlyingFileLoader;
     }
-
 
     /**
      * @param string $resource
@@ -53,7 +36,7 @@ class ApcuFileCacheLoader extends FileLoader
      *
      * @return string
      */
-    private function checksum($resource)
+    private function checksum($resource): string
     {
         return filemtime($resource) . '-' . filesize($resource);
     }
@@ -61,11 +44,11 @@ class ApcuFileCacheLoader extends FileLoader
     /**
      * Checksum saved in cache
      *
-     * @param $resource
+     * @param string $resource
      *
      * @return string
      */
-    private function cacheChecksum($resource)
+    private function cacheChecksum(string $resource): string
     {
         return apcu_fetch($resource . '-checksum');
     }
@@ -73,33 +56,33 @@ class ApcuFileCacheLoader extends FileLoader
     /**
      * Set the cache checksum
      *
-     * @param $resource
+     * @param string $resource
      * @param $checksum
      *
-     * @return array|bool
+     * @return void
      */
-    private function setCacheChecksum($resource, $checksum)
+    private function setCacheChecksum(string $resource, $checksum): void
     {
-        return apcu_store($resource . '-checksum', $checksum);
+        apcu_store($resource . '-checksum', $checksum);
     }
 
     /**
      * Return the cached messages
      *
-     * @param $ressource
+     * @param string $resource
      *
      * @return array
      */
-    private function cachedMessages($ressource)
+    private function cachedMessages(string $resource): array
     {
-        if ($this->cacheChecksum($ressource) == ($currentChecksum = $this->checksum($ressource))) {
-            return apcu_fetch($ressource . '-messages');
+        if ($this->cacheChecksum($resource) == ($currentChecksum = $this->checksum($resource))) {
+            return apcu_fetch($resource . '-messages');
         }
 
-        $messages = $this->underlyingFileLoader->loadResource($ressource);
+        $messages = $this->underlyingFileLoader->loadResource($resource);
 
-        apcu_store($ressource . '-messages', $messages);
-        $this->setCacheChecksum($ressource, $currentChecksum);
+        apcu_store($resource . '-messages', $messages);
+        $this->setCacheChecksum($resource, $currentChecksum);
 
         return $messages;
     }

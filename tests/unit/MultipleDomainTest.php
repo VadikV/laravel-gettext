@@ -1,12 +1,14 @@
 <?php
 
-use \Mockery as m;
-
-use Xinax\LaravelGettext\Testing\BaseTestCase;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Mockery as m;
 use Xinax\LaravelGettext\Config\ConfigManager;
-use Xinax\LaravelGettext\Adapters\LaravelAdapter;
+use Xinax\LaravelGettext\Exceptions\DirectoryNotFoundException;
+use Xinax\LaravelGettext\Exceptions\FileCreationException;
+use Xinax\LaravelGettext\Exceptions\LocaleFileNotFoundException;
+use Xinax\LaravelGettext\Exceptions\RequiredConfigurationKeyException;
 use Xinax\LaravelGettext\FileSystem;
-use Xinax\LaravelGettext\Translators\Symfony;
+use Xinax\LaravelGettext\Testing\BaseTestCase;
 
 /**
  * Created by PhpStorm.
@@ -21,39 +23,23 @@ class MultipleDomainTest extends BaseTestCase
      *
      * @var string
      */
-    protected $appPath = __DIR__.'/../../vendor/laravel/laravel/bootstrap/app.php';
+    protected string $appPath = __DIR__ . '/../../vendor/laravel/laravel/bootstrap/app.php';
 
-    /**
-     * FileSystem helper
-     * @var FileSystem
-     */
-    protected $fileSystem;
+    protected FileSystem    $fileSystem;
+    protected ConfigManager $configManager;
+    protected string|false  $basePath;
+    protected string        $storagePath;
 
-    /**
-     * Configuration manager
-     * @var ConfigManager
-     */
-    protected $configManager;
-
-    /**
-     * Testing base path
-     * @var String
-     */
-    protected $basePath;
-
-    /**
-     * Testing storage path
-     * @var String
-     */
-    protected $storagePath;
-
-    public function __construct()
+    public function __construct(string $name)
     {
-        parent::__construct();
+        parent::__construct($name);
 
         $this->clearFiles();
     }
 
+    /**
+     * @throws RequiredConfigurationKeyException
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -129,16 +115,19 @@ class MultipleDomainTest extends BaseTestCase
      */
     public function testCompileViews()
     {
-        $viewPaths = [ 'views' ];
+        $viewPaths = ['views'];
 
         $result = $this->fileSystem->compileViews($viewPaths, "frontend");
         $this->assertTrue($result);
-
     }
 
 
     /**
      * Test the update
+     * @throws DirectoryNotFoundException
+     * @throws FileNotFoundException
+     * @throws FileCreationException
+     * @throws LocaleFileNotFoundException
      */
     public function testFileSystem()
     {
@@ -155,7 +144,7 @@ class MultipleDomainTest extends BaseTestCase
 
         $this->assertCount(3, $localesGenerated);
         $this->assertTrue(is_dir($domainPath));
-        $this->assertTrue(strpos($domainPath, 'i18n') !== false);
+        $this->assertTrue(str_contains($domainPath, 'i18n'));
 
         foreach ($localesGenerated as $localeGenerated) {
             $this->assertTrue(file_exists($localeGenerated));
@@ -171,7 +160,7 @@ class MultipleDomainTest extends BaseTestCase
     {
         // dir/
         $from = __DIR__;
-        $to = dirname(dirname(__DIR__));
+        $to = dirname(__DIR__, 2);
 
         $result = $this->fileSystem->getRelativePath($to, $from);
 
@@ -190,7 +179,7 @@ class MultipleDomainTest extends BaseTestCase
     /**
      * Clear all files generated for testing purposes
      */
-    protected function clearFiles()
+    protected function clearFiles(): void
     {
         $dir = __DIR__ . '/../lang/i18n';
         FileSystem::clearDirectory($dir);

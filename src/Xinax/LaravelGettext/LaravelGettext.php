@@ -3,21 +3,13 @@
 namespace Xinax\LaravelGettext;
 
 use Xinax\LaravelGettext\Composers\LanguageSelector;
+use Xinax\LaravelGettext\Exceptions\UndefinedDomainException;
 use Xinax\LaravelGettext\Translators\TranslatorInterface;
 
 class LaravelGettext
 {
-    /**
-     * Translator handler
-     *
-     * @var TranslatorInterface
-     */
-    protected $translator;
-    
-    /**
-     * @param TranslatorInterface $gettext
-     * @throws Exceptions\MissingPhpGettextModuleException
-     */
+    protected TranslatorInterface $translator;
+
     public function __construct(TranslatorInterface $gettext)
     {
         $this->translator = $gettext;
@@ -28,7 +20,7 @@ class LaravelGettext
      *
      * @return string
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->translator->getEncoding();
     }
@@ -39,9 +31,9 @@ class LaravelGettext
      * @param string $encoding
      * @return $this
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): static
     {
-        $this->encoding = $encoding;
+        $this->translator->setEncoding($encoding);
         return $this;
     }
 
@@ -50,7 +42,7 @@ class LaravelGettext
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->translator->getLocale();
     }
@@ -60,10 +52,8 @@ class LaravelGettext
      *
      * @param string $locale
      * @return $this
-     * @throws Exceptions\LocaleNotSupportedException
-     * @throws \Exception
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         if ($locale != $this->getLocale()) {
             $this->translator->setLocale($locale);
@@ -79,7 +69,7 @@ class LaravelGettext
      * @param string|null $locale
      * @return string|null
      */
-    public function getLocaleLanguage($locale = null)
+    public function getLocaleLanguage(string $locale = null): ?string
     {
         if (is_null($locale)) {
             $locale = $this->getLocale();
@@ -100,18 +90,19 @@ class LaravelGettext
      * @param array $labels
      * @return LanguageSelector
      */
-    public function getSelector($labels = [])
+    public function getSelector(array $labels = []): LanguageSelector
     {
         return LanguageSelector::create($this, $labels);
     }
 
     /**
      * Sets the current domain
-     * 
+     *
      * @param string $domain
      * @return $this
+     * @throws UndefinedDomainException
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): static
     {
         $this->translator->setDomain($domain);
         return $this;
@@ -122,7 +113,7 @@ class LaravelGettext
      *
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->translator->getDomain();
     }
@@ -130,10 +121,10 @@ class LaravelGettext
     /**
      * Translates a message with the current handler
      *
-     * @param $message
+     * @param string $message
      * @return string
      */
-    public function translate($message)
+    public function translate(string $message): string
     {
         return $this->translator->translate($message);
     }
@@ -141,12 +132,12 @@ class LaravelGettext
     /**
      * Translates a plural string with the current handler
      *
-     * @param $singular
-     * @param $plural
-     * @param $count
+     * @param string $singular
+     * @param string $plural
+     * @param int $count
      * @return string
      */
-    public function translatePlural($singular, $plural, $count)
+    public function translatePlural(string $singular, string $plural, int $count): string
     {
         return $this->translator->translatePlural($singular, $plural, $count);
     }
@@ -156,7 +147,7 @@ class LaravelGettext
      *
      * @return TranslatorInterface
      */
-    public function getTranslator()
+    public function getTranslator(): TranslatorInterface
     {
         return $this->translator;
     }
@@ -167,7 +158,7 @@ class LaravelGettext
      * @param TranslatorInterface $translator
      * @return $this
      */
-    public function setTranslator(TranslatorInterface $translator)
+    public function setTranslator(TranslatorInterface $translator): static
     {
         $this->translator = $translator;
         return $this;
@@ -178,7 +169,7 @@ class LaravelGettext
      *
      * @return array
      */
-    public function getSupportedLocales()
+    public function getSupportedLocales(): array
     {
         return $this->translator->supportedLocales();
     }
@@ -186,9 +177,10 @@ class LaravelGettext
     /**
      * Indicates if given locale is supported
      *
+     * @param string|null $locale
      * @return bool
      */
-    public function isLocaleSupported($locale)
+    public function isLocaleSupported(?string $locale): bool
     {
         return $this->translator->isLocaleSupported($locale);
     }
