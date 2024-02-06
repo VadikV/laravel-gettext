@@ -2,149 +2,115 @@
 
 namespace Xinax\LaravelGettext\Config\Models;
 
+use InvalidArgumentException;
+
 class Config
 {
     /**
      * Session identifier
-     *
-     * @var string
      */
-    protected $sessionIdentifier;
+    protected string $sessionIdentifier = 'laravel-gettext-locale';
 
     /**
      * Charset encoding for files
-     *
-     * @var string
      */
-    protected $encoding;
+    protected string $encoding = 'UTF-8';
 
     /**
      * Full ISO Locale (en_EN)
-     *
-     * @var string
      */
-    protected $locale;
+    protected string $locale = 'en_US';
 
     /**
      * Locale categories
-     *
-     * @type array
      */
-    protected $categories;
+    protected array $categories = ['LC_ALL'];
 
     /**
      * Fallback locale
-     *
-     * @var string
      */
-    protected $fallbackLocale;
+    protected string $fallbackLocale = 'en_US';
 
     /**
      * Supported locales
-     *
-     * @var array
      */
-    protected $supportedLocales;
+    protected array $supportedLocales = ['en_US'];
 
     /**
      * Gettext domain
-     *
-     * @var string
      */
-    protected $domain;
+    protected string $domain = 'messages';
 
     /**
      * Path to translation files
-     *
-     * @var string
      */
-    protected $translationsPath;
+    protected string $translationsPath = '../resources/lang';
 
     /**
      * Project identifier
-     *
-     * @var string
      */
-    protected $project;
+    protected string $project = '';
 
     /**
      * Translator contact data
-     *
-     * @var string
      */
-    protected $translator;
+    protected string $translator = '';
 
     /**
      * Source paths
-     *
-     * @var array
      */
-    protected $sourcePaths;
+    protected array $sourcePaths = [];
 
     /**
      * Sync with laravel locale
-     *
-     * @type Boolean
      */
-    protected $syncLaravel;
+    protected bool $syncLaravel = true;
 
     /**
      * The adapter class used to sync with laravel locale
-     *
-     * @var string
      */
-    protected $adapter;
+    protected string $adapter = '';
 
 
     /**
      * The storage class used store the current locale information
-     *
-     * @var string
      */
-    protected $storage;
+    protected string $storage = '';
 
     /**
      * Custom locale name
      * Used when needed locales are unavalilable
-     *
-     * @type Boolean
      */
-    protected $customLocale;
+    protected bool $customLocale = false;
 
     /**
      * Default relative path
-     *
-     * @type string
      */
-    protected $relativePath;
+    protected string $relativePath = '../../../../../app';
 
     /**
      * Poedit keywords list
-     *
-     * @type array
      */
-    protected $keywordsList;
+    protected array $keywordsList = [];
 
     /**
      * Core translation handler
      */
-    protected $handler;
+    protected string $handler = 'symfony';
 
-    public function __construct()
-    {
-        $this->encoding         = 'UTF-8';
-        $this->supportedLocales = [];
-        $this->sourcePaths      = [];
-        $this->customLocale     = false;
-        $this->relativePath     = "../../../../../app";
-    }
-
-    public function getRelativePath()
+    /**
+     * @return string
+     */
+    public function getRelativePath(): string
     {
         return $this->relativePath;
     }
 
-    public function setRelativePath($path)
+    /**
+     * @param string $path
+     * @return void
+     */
+    public function setRelativePath(string $path): void
     {
         $this->relativePath = $path;
     }
@@ -152,17 +118,16 @@ class Config
     /**
      * @return string
      */
-    public function getSessionIdentifier()
+    public function getSessionIdentifier(): string
     {
         return $this->sessionIdentifier;
     }
 
     /**
      * @param string $sessionIdentifier
-     *
      * @return $this
      */
-    public function setSessionIdentifier($sessionIdentifier)
+    public function setSessionIdentifier(string $sessionIdentifier): static
     {
         $this->sessionIdentifier = $sessionIdentifier;
 
@@ -172,17 +137,16 @@ class Config
     /**
      * @return string
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
 
     /**
      * @param string $encoding
-     *
      * @return $this
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): static
     {
         $this->encoding = $encoding;
 
@@ -192,17 +156,16 @@ class Config
     /**
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
     /**
      * @param string $locale
-     *
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
@@ -214,7 +177,7 @@ class Config
      *
      * @return array
      */
-    public function getCategories()
+    public function getCategories(): array
     {
         return $this->categories;
     }
@@ -226,7 +189,7 @@ class Config
      *
      * @return self
      */
-    public function setCategories($categories)
+    public function setCategories(array $categories): static
     {
         $this->categories = $categories;
 
@@ -236,7 +199,7 @@ class Config
     /**
      * @return string
      */
-    public function getFallbackLocale()
+    public function getFallbackLocale(): string
     {
         return $this->fallbackLocale;
     }
@@ -246,7 +209,7 @@ class Config
      *
      * @return $this
      */
-    public function setFallbackLocale($fallbackLocale)
+    public function setFallbackLocale(string $fallbackLocale): static
     {
         $this->fallbackLocale = $fallbackLocale;
 
@@ -256,7 +219,7 @@ class Config
     /**
      * @return array
      */
-    public function getSupportedLocales()
+    public function getSupportedLocales(): array
     {
         return $this->supportedLocales;
     }
@@ -266,7 +229,7 @@ class Config
      *
      * @return $this
      */
-    public function setSupportedLocales($supportedLocales)
+    public function setSupportedLocales(array $supportedLocales): static
     {
         $this->supportedLocales = $supportedLocales;
 
@@ -276,7 +239,7 @@ class Config
     /**
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->domain;
     }
@@ -286,7 +249,7 @@ class Config
      *
      * @return $this
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): static
     {
         $this->domain = $domain;
 
@@ -296,7 +259,7 @@ class Config
     /**
      * @return string
      */
-    public function getTranslationsPath()
+    public function getTranslationsPath(): string
     {
         return $this->translationsPath;
     }
@@ -306,7 +269,7 @@ class Config
      *
      * @return $this
      */
-    public function setTranslationsPath($translationsPath)
+    public function setTranslationsPath(string $translationsPath): static
     {
         $this->translationsPath = $translationsPath;
 
@@ -316,7 +279,7 @@ class Config
     /**
      * @return string
      */
-    public function getProject()
+    public function getProject(): string
     {
         return $this->project;
     }
@@ -326,7 +289,7 @@ class Config
      *
      * @return $this
      */
-    public function setProject($project)
+    public function setProject(string $project): static
     {
         $this->project = $project;
 
@@ -336,7 +299,7 @@ class Config
     /**
      * @return string
      */
-    public function getTranslator()
+    public function getTranslator(): string
     {
         return $this->translator;
     }
@@ -346,7 +309,7 @@ class Config
      *
      * @return $this
      */
-    public function setTranslator($translator)
+    public function setTranslator(string $translator): static
     {
         $this->translator = $translator;
 
@@ -356,7 +319,7 @@ class Config
     /**
      * @return array
      */
-    public function getSourcePaths()
+    public function getSourcePaths(): array
     {
         return $this->sourcePaths;
     }
@@ -366,7 +329,7 @@ class Config
      *
      * @return $this
      */
-    public function setSourcePaths($sourcePaths)
+    public function setSourcePaths(array $sourcePaths): static
     {
         $this->sourcePaths = $sourcePaths;
 
@@ -376,7 +339,7 @@ class Config
     /**
      * @return boolean
      */
-    public function isSyncLaravel()
+    public function isSyncLaravel(): bool
     {
         return $this->syncLaravel;
     }
@@ -384,9 +347,9 @@ class Config
     /**
      * Gets the Sync with laravel locale.
      *
-     * @return mixed
+     * @return bool
      */
-    public function getSyncLaravel()
+    public function getSyncLaravel(): bool
     {
         return $this->syncLaravel;
     }
@@ -396,7 +359,7 @@ class Config
      *
      * @return $this
      */
-    public function setSyncLaravel($syncLaravel)
+    public function setSyncLaravel(bool $syncLaravel): static
     {
         $this->syncLaravel = $syncLaravel;
 
@@ -408,7 +371,7 @@ class Config
      *
      * @return string
      */
-    public function getAdapter()
+    public function getAdapter(): string
     {
         return $this->adapter;
     }
@@ -418,7 +381,7 @@ class Config
      *
      * @return $this
      */
-    public function setAdapter($adapter)
+    public function setAdapter(string $adapter): static
     {
         $this->adapter = $adapter;
 
@@ -430,7 +393,7 @@ class Config
      *
      * @return string
      */
-    public function getStorage()
+    public function getStorage(): string
     {
         return $this->storage;
     }
@@ -440,7 +403,7 @@ class Config
      *
      * @return $this
      */
-    public function setStorage($storage)
+    public function setStorage(string $storage): static
     {
         $this->storage = $storage;
 
@@ -448,19 +411,18 @@ class Config
     }
 
 
-
     /**
      * Return an array with all domain names
      *
      * @return array
      */
-    public function getAllDomains()
+    public function getAllDomains(): array
     {
         $domains = [$this->domain]; // add the default domain
 
         foreach ($this->sourcePaths as $domain => $paths) {
             if (is_array($paths)) {
-                array_push($domains, $domain);
+                $domains[] = $domain;
             }
         }
 
@@ -474,7 +436,7 @@ class Config
      *
      * @return array
      */
-    public function getSourcesFromDomain($domain)
+    public function getSourcesFromDomain($domain): array
     {
         // grab any paths wrapped in $domain
         $explicitPaths = array_key_exists($domain, $this->sourcePaths)
@@ -506,7 +468,7 @@ class Config
      *
      * @return boolean
      */
-    public function getCustomLocale()
+    public function getCustomLocale(): bool
     {
         return $this->customLocale;
     }
@@ -514,11 +476,10 @@ class Config
     /**
      * Sets if will use C locale structure.
      *
-     * @param mixed $sourcePaths the source paths
-     *
+     * @param bool $customLocale
      * @return self
      */
-    public function setCustomLocale($customLocale)
+    public function setCustomLocale(bool $customLocale): static
     {
         $this->customLocale = $customLocale;
 
@@ -528,9 +489,9 @@ class Config
     /**
      * Gets the Poedit keywords list.
      *
-     * @return mixed
+     * @return string[]
      */
-    public function getKeywordsList()
+    public function getKeywordsList(): array
     {
         return !empty($this->keywordsList)
             ? $this->keywordsList
@@ -540,11 +501,11 @@ class Config
     /**
      * Sets the Poedit keywords list.
      *
-     * @param mixed $keywordsList the keywords list
+     * @param string[] $keywordsList the keywords list
      *
      * @return self
      */
-    public function setKeywordsList($keywordsList)
+    public function setKeywordsList(array $keywordsList): static
     {
         $this->keywordsList = $keywordsList;
 
@@ -554,21 +515,19 @@ class Config
     /**
      * Sets the handler type. Also check for valid handler name
      *
-     * @param $handler
+     * @param string $handler
      *
      * @return $this
-     *
-     * @throws \Exception
      */
-    public function setHandler($handler)
+    public function setHandler(string $handler): static
     {
         if (!in_array($handler, [
             'symfony',
             'gettext',
         ])
         ) {
-            throw new \Exception("Handler '$handler' is not supported'");
-        };
+            throw new InvalidArgumentException("Handler '$handler' is not supported'");
+        }
 
         $this->handler = $handler;
 
@@ -578,9 +537,9 @@ class Config
     /**
      * Returns the handler name
      *
-     * @return mixed
+     * @return string
      */
-    public function getHandler()
+    public function getHandler(): string
     {
         return !empty($this->handler)
             ? $this->handler

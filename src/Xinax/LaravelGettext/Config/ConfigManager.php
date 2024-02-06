@@ -2,20 +2,15 @@
 
 namespace Xinax\LaravelGettext\Config;
 
-use \Xinax\LaravelGettext\Config\Models\Config as ConfigModel;
-use \Xinax\LaravelGettext\Exceptions\RequiredConfigurationFileException;
-use \Xinax\LaravelGettext\Exceptions\RequiredConfigurationKeyException;
-use \Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Config;
+use Xinax\LaravelGettext\Adapters\LaravelAdapter;
+use Xinax\LaravelGettext\Config\Models\Config as ConfigModel;
+use Xinax\LaravelGettext\Exceptions\RequiredConfigurationKeyException;
 use Xinax\LaravelGettext\Storages\SessionStorage;
 
 class ConfigManager
 {
-    /**
-     * Config model
-     *
-     * @var ConfigModel
-     */
-    protected $config;
+    protected ConfigModel $config;
 
     /**
      * Package configuration route (published)
@@ -23,15 +18,15 @@ class ConfigManager
     const DEFAULT_PACKAGE_CONFIG = 'laravel-gettext';
 
     /**
-     * @param array $config
+     * @param array|null $config
      * @throws RequiredConfigurationKeyException
      */
-    public function __construct($config = null)
+    public function __construct(array $config = null)
     {
         if ($config) {
             $this->config = $this->generateFromArray($config);
-        } else {
-            // In Laravel 5.3 we need empty config model
+        }
+        else {
             $this->config = new ConfigModel;
         }
     }
@@ -41,9 +36,9 @@ class ConfigManager
      *
      * @param null $config
      * @return static
-     * @throws RequiredConfigurationFileException
+     * @throws RequiredConfigurationKeyException
      */
-    public static function create($config = null)
+    public static function create($config = null): static
     {
         if (is_null($config)) {
             // Default package configuration file (published)
@@ -58,7 +53,7 @@ class ConfigManager
      *
      * @return ConfigModel
      */
-    public function get()
+    public function get(): ConfigModel
     {
         return $this->config;
     }
@@ -70,7 +65,7 @@ class ConfigManager
      * @return ConfigModel
      * @throws RequiredConfigurationKeyException
      */
-    protected function generateFromArray(array $config)
+    protected function generateFromArray(array $config): ConfigModel
     {
         $requiredKeys = [
             'locale',
@@ -88,41 +83,41 @@ class ConfigManager
 
         $container = new ConfigModel();
 
-        $id = isset($config['session-identifier']) ? $config['session-identifier'] : 'laravel-gettext-locale';
+        $id = isset($config['session-identifier']) ? (string)$config['session-identifier'] : 'laravel-gettext-locale';
 
-        $adapter = isset($config['adapter']) ? $config['adapter'] : \Xinax\LaravelGettext\Adapters\LaravelAdapter::class;
+        $adapter = isset($config['adapter']) ? (string)$config['adapter'] : LaravelAdapter::class;
 
-        $storage = isset($config['storage']) ? $config['storage'] : SessionStorage::class;
+        $storage = isset($config['storage']) ? (string)$config['storage'] : SessionStorage::class;
 
-        $container->setLocale($config['locale'])
+        $container->setLocale((string)$config['locale'])
             ->setSessionIdentifier($id)
-            ->setEncoding($config['encoding'])
-            ->setCategories(array_get('categories', $config, ['LC_ALL']))
-            ->setFallbackLocale($config['fallback-locale'])
-            ->setSupportedLocales($config['supported-locales'])
-            ->setDomain($config['domain'])
-            ->setTranslationsPath($config['translations-path'])
-            ->setProject($config['project'])
-            ->setTranslator($config['translator'])
-            ->setSourcePaths($config['source-paths'])
-            ->setSyncLaravel($config['sync-laravel'])
+            ->setEncoding((string)$config['encoding'])
+            ->setCategories((array)($config['categories'] ?? ['LC_ALL']))
+            ->setFallbackLocale((string)$config['fallback-locale'])
+            ->setSupportedLocales((array)$config['supported-locales'])
+            ->setDomain((string)$config['domain'])
+            ->setTranslationsPath((string)$config['translations-path'])
+            ->setProject((string)$config['project'])
+            ->setTranslator((string)$config['translator'])
+            ->setSourcePaths((array)$config['source-paths'])
+            ->setSyncLaravel((bool)$config['sync-laravel'])
             ->setAdapter($adapter)
             ->setStorage($storage);
 
         if (array_key_exists('relative-path', $config)) {
-            $container->setRelativePath($config['relative-path']);
+            $container->setRelativePath((string)$config['relative-path']);
         }
 
         if (array_key_exists("custom-locale", $config)) {
-            $container->setCustomLocale($config['custom-locale']);
+            $container->setCustomLocale((bool)$config['custom-locale']);
         }
 
         if (array_key_exists("keywords-list", $config)) {
-            $container->setKeywordsList($config['keywords-list']);
+            $container->setKeywordsList((array)$config['keywords-list']);
         }
 
         if (array_key_exists("handler", $config)) {
-            $container->setHandler($config['handler']);
+            $container->setHandler((string)$config['handler']);
         }
 
         return $container;
