@@ -34,7 +34,7 @@ abstract class BaseTranslator implements TranslatorInterface
      */
     public function setLocale(string $locale): static
     {
-        if ($locale == $this->storage->getLocale()) {
+        if ($locale === $this->storage->getLocale()) {
             return $this;
         }
 
@@ -105,7 +105,7 @@ abstract class BaseTranslator implements TranslatorInterface
     public function setDomain(string $domain): static
     {
         if (!in_array($domain, $this->configuration->getAllDomains())) {
-            throw new UndefinedDomainException("Domain '$domain' is not registered.");
+            throw new UndefinedDomainException("Domain '{$domain}' is not registered.");
         }
 
         $this->storage->setDomain($domain);

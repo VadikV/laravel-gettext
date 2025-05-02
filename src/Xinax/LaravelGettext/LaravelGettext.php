@@ -55,7 +55,7 @@ class LaravelGettext
      */
     public function setLocale(string $locale): static
     {
-        if ($locale != $this->getLocale()) {
+        if ($locale !== $this->getLocale()) {
             $this->translator->setLocale($locale);
         }
 

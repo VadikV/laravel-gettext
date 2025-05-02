@@ -72,7 +72,7 @@ class Symfony extends BaseTranslator
         $this->getTranslator()->setLocale($locale);
         $this->loadLocaleFile();
 
-        if ($locale != $this->adapter->getLocale()) {
+        if ($locale !== $this->adapter->getLocale()) {
             $this->adapter->setLocale($locale);
         }
 

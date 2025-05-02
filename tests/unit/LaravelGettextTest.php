@@ -15,8 +15,6 @@ class LaravelGettextTest extends BaseTestCase
 {
     /**
      * Base app path
-     *
-     * @var string
      */
     protected string $appPath = __DIR__.'/../../vendor/laravel/laravel/bootstrap/app.php';
 
@@ -99,11 +97,13 @@ class LaravelGettextTest extends BaseTestCase
     {
         $response = $this->translator->setEncoding('UTF-8');
         $this->assertNotEmpty($response);
-        $this->assertInstanceOf('Xinax\LaravelGettext\Translators\Symfony', $response);
+        $this->assertInstanceOf(\Xinax\LaravelGettext\Translators\Symfony::class, $response);
     }
 
     protected function tearDown(): void
     {
         m::close();
+
+        parent::tearDown();
     }
 }

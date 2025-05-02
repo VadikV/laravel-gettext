@@ -6,8 +6,6 @@
  * Time: 10:22
  */
 
-namespace unit;
-
 use Xinax\LaravelGettext\Adapters\LaravelAdapter;
 use Xinax\LaravelGettext\Config\ConfigManager;
 use Xinax\LaravelGettext\FileSystem;
@@ -20,8 +18,6 @@ class TranslationTest extends BaseTestCase
 
     /**
      * Base app path
-     *
-     * @var string
      */
     protected string $appPath = __DIR__ . '/../../vendor/laravel/laravel/bootstrap/app.php';
     /**
@@ -39,8 +35,8 @@ class TranslationTest extends BaseTestCase
         parent::setUp();
         $testConfig = include __DIR__ . '/../config/config_fr.php';
 
-        $config           = ConfigManager::create($testConfig);
-        $adapter          = new LaravelAdapter();
+        $config = ConfigManager::create($testConfig);
+        $adapter = new LaravelAdapter();
         $this->fileSystem = new FileSystem($config->get(), __DIR__ . '/../', __DIR__ . '/../storage');
 
         $translator = new Symfony(
@@ -80,27 +76,27 @@ class TranslationTest extends BaseTestCase
     public function testFrenchTranslationPluralNone()
     {
         $string = $this->translator->setLocale('fr_FR')
-                                   ->translatePluralInline(
-                                       ' {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
-                                       0);
-        $this->assertEquals('Il n\'y a pas de pommes', $string);
+            ->translatePluralInline(
+                ' {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
+                0);
+        $this->assertEquals("Il n'y a pas de pommes", $string);
     }
 
     public function testFrenchTranslationPluralOne()
     {
         $string = $this->translator->setLocale('fr_FR')
-                                   ->translatePluralInline(
-                                       ' {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
-                                       1);
+            ->translatePluralInline(
+                ' {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
+                1);
         $this->assertEquals('Il y a une pomme', $string);
     }
 
     public function testFrenchTranslationPluralMultiple()
     {
         $string = $this->translator->setLocale('fr_FR')
-                                   ->translatePluralInline(
-                                       ' {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
-                                       5);
+            ->translatePluralInline(
+                ' {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
+                5);
         $this->assertEquals('Il y a 5 pommes', $string);
     }
 

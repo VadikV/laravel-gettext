@@ -3,7 +3,7 @@
 // Used for testing
 // return array(
 
-return array(
+return [
 
     /**
      * Session identifier: Key under which the current locale will be stored.
@@ -19,11 +19,11 @@ return array(
     /**
      * Supported locales: An array containing all allowed languages
      */
-    'supported-locales' => array(
+    'supported-locales' => [
         'en_US',
         'es_AR',
         'de_DE'
-    ),
+    ],
 
     /**
      * Default charset encoding.
@@ -94,18 +94,18 @@ return array(
      * Paths on top-level will be associated to the default domain file,
      * for example:
      */
-    'source-paths' => array(
+    'source-paths' => [
 
         // frontend domain
-        'frontend' => array(
+        'frontend' => [
             'controllers',
             'views/frontend'
-        ),
+        ],
 
         // backend domain
-        'backend' => array(
+        'backend' => [
             'views/backend'
-        ),
+        ],
 
         // messages domain
         'messages' => [
@@ -114,7 +114,7 @@ return array(
 
         // default domain (messages)
         'views/misc',
-    ),
+    ],
 
     /**
      * Sync laravel: A flag that determines if the laravel built-in locale must
@@ -142,4 +142,4 @@ return array(
      * @see \Xinax\LaravelGettext\Storages\Storage
      */
     'storage' => \Xinax\LaravelGettext\Storages\SessionStorage::class,
-);
+];

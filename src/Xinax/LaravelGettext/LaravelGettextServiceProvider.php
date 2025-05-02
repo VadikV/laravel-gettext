@@ -56,7 +56,7 @@ class LaravelGettextServiceProvider extends ServiceProvider
             $fileSystem = new FileSystem($configuration->get(), app_path(), storage_path());
             $storage = $app->make($configuration->get()->getStorage());
 
-            if ('symfony' == $configuration->get()->getHandler()) {
+            if ('symfony' === $configuration->get()->getHandler()) {
                 // symfony translator implementation
                 $translator = new Translators\Symfony(
                     $configuration->get(),

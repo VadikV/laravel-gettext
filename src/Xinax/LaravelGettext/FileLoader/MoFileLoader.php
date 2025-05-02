@@ -49,6 +49,7 @@ class MoFileLoader extends FileLoader
         if ($stat['size'] < self::MO_HEADER_SIZE) {
             throw new InvalidResourceException('MO stream content has an invalid format.');
         }
+
         $magic = unpack('V1', fread($stream, 4));
         $magic = hexdec(substr(dechex(current($magic)), -8));
 
@@ -72,7 +73,7 @@ class MoFileLoader extends FileLoader
         // offsetHashes
         $this->readLong($stream, $isBigEndian);
 
-        $messages = array();
+        $messages = [];
 
         for ($i = 0; $i < $count; ++$i) {
             $pluralId = null;
@@ -109,8 +110,8 @@ class MoFileLoader extends FileLoader
                 $translated = explode("\000", $translated);
             }
 
-            $ids = array('singular' => $singularId, 'plural' => $pluralId);
-            $item = compact('ids', 'translated');
+            $ids = ['singular' => $singularId, 'plural' => $pluralId];
+            $item = ['ids' => $ids, 'translated' => $translated];
 
             if (is_array($item['translated'])) {
                 $messages[$item['ids']['singular']] = stripcslashes($item['translated'][0]);

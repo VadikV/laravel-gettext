@@ -75,7 +75,7 @@ class FileSystem
             $path = $this->basePath . DIRECTORY_SEPARATOR . $path;
 
             if (!$realPath = realPath($path)) {
-                throw new Exceptions\DirectoryNotFoundException("Failed to resolve $path, please check that it exists");
+                throw new Exceptions\DirectoryNotFoundException("Failed to resolve {$path}, please check that it exists");
             }
 
             $fs = new \Illuminate\Filesystem\Filesystem();
@@ -154,10 +154,10 @@ class FileSystem
         $template .= '"Last-Translator: ' . $translator . '\n' . "\"\n";
         $template .= '"Language-Team: ' . $translator . '\n' . "\"\n";
         $template .= '"Language: ' . $locale . '\n' . "\"\n";
-        $template .= '"MIME-Version: 1.0' . '\n' . "\"\n";
+        $template .= '"MIME-Version: 1.0\n' . "\"\n";
         $template .= '"Content-Type: text/plain; charset=' . $encoding . '\n' . "\"\n";
-        $template .= '"Content-Transfer-Encoding: 8bit' . '\n' . "\"\n";
-        $template .= '"X-Generator: Poedit 1.5.4' . '\n' . "\"\n";
+        $template .= '"Content-Transfer-Encoding: 8bit\n' . "\"\n";
+        $template .= '"X-Generator: Poedit 1.5.4\n' . "\"\n";
         $template .= '"X-Poedit-KeywordsList: ' . $keywords . '\n' . "\"\n";
         $template .= '"X-Poedit-Basepath: ' . $relativePath . '\n' . "\"\n";
         $template .= '"X-Poedit-SourceCharset: ' . $encoding . '\n' . "\"\n";
@@ -166,7 +166,7 @@ class FileSystem
         $sourcePaths = $this->configuration->getSourcesFromDomain($domain);
 
         // Compiled views on paths
-        if (count($sourcePaths)) {
+        if ($sourcePaths !== []) {
 
             // View compilation
             $this->compileViews($sourcePaths, $domain);
@@ -219,10 +219,10 @@ class FileSystem
      */
     public function addLocale(string $localePath, string $locale): void
     {
-        $data = array(
+        $data = [
             $localePath,
             "LC_MESSAGES"
-        );
+        ];
 
         if (!file_exists($localePath)) {
             $this->createDirectory($localePath);
@@ -282,7 +282,7 @@ class FileSystem
         ];
 
         if ($this->configuration->getCustomLocale()) {
-            $customLocale = array('C');
+            $customLocale = ['C'];
             array_splice($data, 1, 0, $customLocale);
         }
 
@@ -423,6 +423,7 @@ class FileSystem
         if (!file_exists($this->getDomainPath())) {
             $this->createDirectory($this->getDomainPath());
         }
+
         $localePaths = [];
 
         // Locale directories

@@ -8,8 +8,6 @@ class BaseTestCase extends TestCase
 {
     /**
      * Base app path
-     *
-     * @var string
      */
     protected string $appPath = '';
 

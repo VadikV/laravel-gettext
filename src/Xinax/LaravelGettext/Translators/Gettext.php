@@ -68,7 +68,7 @@ class Gettext extends BaseTranslator
 
             // Update all categories set in config
             foreach ($this->categories as $category) {
-                putenv("$category=$gettextLocale");
+                putenv("{$category}={$gettextLocale}");
                 setlocale(constant($category), $gettextLocale);
             }
 
@@ -82,7 +82,7 @@ class Gettext extends BaseTranslator
         catch (Exception $e) {
             $this->locale = $this->configuration->getFallbackLocale();
             $exceptionPosition = $e->getFile() . ":" . $e->getLine();
-            throw new Exception($exceptionPosition . $e->getMessage());
+            throw new Exception($exceptionPosition . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this;

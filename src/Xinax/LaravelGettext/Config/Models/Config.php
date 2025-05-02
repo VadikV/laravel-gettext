@@ -493,9 +493,9 @@ class Config
      */
     public function getKeywordsList(): array
     {
-        return !empty($this->keywordsList)
-            ? $this->keywordsList
-            : ['_'];
+        return empty($this->keywordsList)
+            ? ['_']
+            : $this->keywordsList;
     }
 
     /**
@@ -526,7 +526,7 @@ class Config
             'gettext',
         ])
         ) {
-            throw new InvalidArgumentException("Handler '$handler' is not supported'");
+            throw new InvalidArgumentException("Handler '{$handler}' is not supported'");
         }
 
         $this->handler = $handler;
@@ -541,8 +541,8 @@ class Config
      */
     public function getHandler(): string
     {
-        return !empty($this->handler)
-            ? $this->handler
-            : 'symfony';
+        return empty($this->handler)
+            ? 'symfony'
+            : $this->handler;
     }
 }

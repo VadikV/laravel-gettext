@@ -23,12 +23,7 @@ class ConfigManager
      */
     public function __construct(array $config = null)
     {
-        if ($config) {
-            $this->config = $this->generateFromArray($config);
-        }
-        else {
-            $this->config = new ConfigModel;
-        }
+        $this->config = $config ? $this->generateFromArray($config) : new ConfigModel;
     }
 
     /**

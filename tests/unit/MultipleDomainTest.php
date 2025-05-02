@@ -20,8 +20,6 @@ class MultipleDomainTest extends BaseTestCase
 {
     /**
      * Base app path
-     *
-     * @var string
      */
     protected string $appPath = __DIR__ . '/../../vendor/laravel/laravel/bootstrap/app.php';
 
@@ -174,6 +172,8 @@ class MultipleDomainTest extends BaseTestCase
     protected function tearDown(): void
     {
         m::close();
+
+        parent::tearDown();
     }
 
     /**

@@ -45,7 +45,7 @@ class GettextUpdate extends BaseCommand
                 // Create new locale
                 if (!file_exists($localePath)) {
                     $this->fileSystem->addLocale($localePath, $locale);
-                    $this->comment("New locale was added: $locale ($localePath)");
+                    $this->comment("New locale was added: {$locale} ({$localePath})");
 
                     $count['added']++;
 

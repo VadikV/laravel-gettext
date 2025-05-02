@@ -9,6 +9,7 @@ use Xinax\LaravelGettext\LaravelGettext;
 class LanguageSelector
 {
     protected array          $labels = [];
+
     protected LaravelGettext $gettext;
 
     public function __construct(LaravelGettext $gettext, array $labels = [])
@@ -55,9 +56,7 @@ class LanguageSelector
             $html .= '<li>' . $link . '</li>';
         }
 
-        $html .= '</ul>';
-
-        return $html;
+        return $html . '</ul>';
     }
 
     /**

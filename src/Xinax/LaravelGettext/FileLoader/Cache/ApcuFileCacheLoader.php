@@ -75,7 +75,7 @@ class ApcuFileCacheLoader extends FileLoader
      */
     private function cachedMessages(string $resource): array
     {
-        if ($this->cacheChecksum($resource) == ($currentChecksum = $this->checksum($resource))) {
+        if ($this->cacheChecksum($resource) === $currentChecksum = $this->checksum($resource)) {
             return apcu_fetch($resource . '-messages');
         }
 
