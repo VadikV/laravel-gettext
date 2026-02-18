@@ -14,28 +14,38 @@ if (!function_exists('_i')) {
      */
     function _i(string $message, mixed $args = null): string
     {
+        $translation = app(LaravelGettext::class)->translate($message);
 
-        $translator = app(LaravelGettext::class);
-        $translation = $translator->translate($message);
+        if ($translation === '') {
+            /**
+             * If translations are missing returns
+             * the original message.
+             *
+             * @see https://github.com/symfony/symfony/issues/13483
+             */
+            return $message;
+        }
 
-        if (strlen($translation)) {
-            if (isset($args)) {
-                if (!is_array($args)) {
-                    $args = array_slice(func_get_args(), 1);
-                }
-                $translation = vsprintf($translation, $args);
-            }
-
+        if ($args === null) {
             return $translation;
         }
 
-        /**
-         * If translations are missing returns
-         * the original message.
-         *
-         * @see https://github.com/symfony/symfony/issues/13483
-         */
-        return $message;
+        if (!is_array($args)) {
+            $args = array_slice(func_get_args(), 1);
+        }
+        elseif (!array_is_list($args)) {
+            $new_args = [];
+            foreach ($args as $key => $value) {
+                $translation = str_replace("{{$key}}", $value, $translation, $count);
+                if ($count === 0) {
+                    $new_args[] = $value;
+                }
+            }
+            $args = $new_args;
+        }
+
+
+        return $args ? vsprintf($translation, $args) : $translation;
     }
 }
 
