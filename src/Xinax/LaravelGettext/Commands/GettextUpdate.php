@@ -103,6 +103,7 @@ class GettextUpdate extends BaseCommand
      *
      * @return array
      */
+    #[\Override]
     protected function getOptions(): array
     {
         return [

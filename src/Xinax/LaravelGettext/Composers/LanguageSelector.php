@@ -1,21 +1,17 @@
 <?php namespace Xinax\LaravelGettext\Composers;
 
+use Stringable;
 use Xinax\LaravelGettext\LaravelGettext;
 
 /**
  * Simple language selector generator.
  * @author Nicolás Daniel Palumbo
  */
-class LanguageSelector
+class LanguageSelector implements Stringable
 {
-    protected array          $labels = [];
-
-    protected LaravelGettext $gettext;
-
-    public function __construct(LaravelGettext $gettext, array $labels = [])
+    public function __construct(protected LaravelGettext $gettext,
+                                protected array          $labels = [])
     {
-        $this->labels = $labels;
-        $this->gettext = $gettext;
     }
 
     /**

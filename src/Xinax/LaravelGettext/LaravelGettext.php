@@ -8,11 +8,8 @@ use Xinax\LaravelGettext\Translators\TranslatorInterface;
 
 class LaravelGettext
 {
-    protected TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $gettext)
+    public function __construct(protected TranslatorInterface $translator)
     {
-        $this->translator = $gettext;
     }
 
     /**
@@ -69,7 +66,7 @@ class LaravelGettext
      * @param string|null $locale
      * @return string|null
      */
-    public function getLocaleLanguage(string $locale = null): ?string
+    public function getLocaleLanguage(?string $locale = null): ?string
     {
         if (is_null($locale)) {
             $locale = $this->getLocale();

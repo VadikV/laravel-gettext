@@ -6,6 +6,8 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Xinax\LaravelGettext\Adapters\AdapterInterface;
+use Xinax\LaravelGettext\Commands\GettextCreate;
+use Xinax\LaravelGettext\Commands\GettextUpdate;
 use Xinax\LaravelGettext\Config\ConfigManager;
 use Xinax\LaravelGettext\Config\Models\Config;
 use Xinax\LaravelGettext\Exceptions\RequiredConfigurationFileException;
@@ -37,6 +39,7 @@ class LaravelGettextServiceProvider extends ServiceProvider
      *
      * @throws RequiredConfigurationFileException
      */
+    #[\Override]
     public function register(): void
     {
         $configuration = ConfigManager::create();
@@ -46,13 +49,10 @@ class LaravelGettextServiceProvider extends ServiceProvider
             $configuration->get()->getAdapter()
         );
 
-        $this->app->singleton(Config::class, function () use ($configuration) {
-            return $configuration->get();
-        });
+        $this->app->singleton(Config::class, fn(): Config => $configuration->get());
 
         // Main class register
-        $this->app->singleton(LaravelGettext::class, function (Application $app) use ($configuration) {
-
+        $this->app->singleton(LaravelGettext::class, function (Application $app) use ($configuration): LaravelGettext {
             $fileSystem = new FileSystem($configuration->get(), app_path(), storage_path());
             $storage = $app->make($configuration->get()->getStorage());
 
@@ -82,7 +82,7 @@ class LaravelGettextServiceProvider extends ServiceProvider
         $this->app->alias(LaravelGettext::class, 'laravel-gettext');
 
         // Alias
-        $this->app->booting(function () {
+        $this->app->booting(function (): void {
             $aliasLoader = AliasLoader::getInstance();
             $aliasLoader->alias('LaravelGettext', \Xinax\LaravelGettext\Facades\LaravelGettext::class);
         });
@@ -96,13 +96,9 @@ class LaravelGettextServiceProvider extends ServiceProvider
     protected function registerCommands(): void
     {
         // Package commands
-        $this->app->bind('xinax::gettext.create', function () {
-            return new Commands\GettextCreate();
-        });
+        $this->app->bind('xinax::gettext.create', fn(): GettextCreate => new Commands\GettextCreate());
 
-        $this->app->bind('xinax::gettext.update', function () {
-            return new Commands\GettextUpdate();
-        });
+        $this->app->bind('xinax::gettext.update', fn(): GettextUpdate => new Commands\GettextUpdate());
 
         $this->commands([
             'xinax::gettext.create',

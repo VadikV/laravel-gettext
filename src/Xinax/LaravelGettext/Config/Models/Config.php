@@ -524,8 +524,7 @@ class Config
         if (!in_array($handler, [
             'symfony',
             'gettext',
-        ])
-        ) {
+        ], true)) {
             throw new InvalidArgumentException("Handler '{$handler}' is not supported'");
         }
 

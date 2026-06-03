@@ -54,6 +54,7 @@ class Gettext extends BaseTranslator
      * @throws LocaleNotSupportedException
      * @throws Exception
      */
+    #[\Override]
     public function setLocale(string $locale): static
     {
         if (!$this->isLocaleSupported($locale)) {
@@ -95,6 +96,7 @@ class Gettext extends BaseTranslator
      * @param string|null $locale
      * @return boolean
      */
+    #[\Override]
     public function isLocaleSupported(?string $locale): bool
     {
         if ($locale) {
@@ -107,6 +109,7 @@ class Gettext extends BaseTranslator
     /**
      * Return the current locale
      */
+    #[\Override]
     public function __toString(): string
     {
         return $this->getLocale();
@@ -116,6 +119,7 @@ class Gettext extends BaseTranslator
     /**
      * Gets the Current encoding.
      */
+    #[\Override]
     public function getEncoding(): string
     {
         return $this->encoding;
@@ -127,6 +131,7 @@ class Gettext extends BaseTranslator
      * @param mixed $encoding the encoding
      * @return self
      */
+    #[\Override]
     public function setEncoding(string $encoding): static
     {
         $this->encoding = $encoding;
@@ -140,6 +145,7 @@ class Gettext extends BaseTranslator
      * @return  self
      * @throws  UndefinedDomainException    If domain is not defined
      */
+    #[\Override]
     public function setDomain(string $domain): static
     {
         parent::setDomain($domain);

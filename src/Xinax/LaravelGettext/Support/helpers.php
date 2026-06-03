@@ -73,7 +73,7 @@ if (!function_exists('_')) {
      * @param null $args
      * @return string
      */
-    function _($message, $args = null): string
+    function _(string $message, $args = null): string
     {
         return _i($message, $args);
     }

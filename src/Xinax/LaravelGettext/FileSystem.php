@@ -68,7 +68,7 @@ class FileSystem
 
         // Domain separation
         $domainDir = $targetDir . DIRECTORY_SEPARATOR . $domain;
-        $this->clearDirectory($domainDir);
+        static::clearDirectory($domainDir);
         $this->createDirectory($domainDir);
 
         foreach ($viewPaths as $path) {
@@ -107,7 +107,7 @@ class FileSystem
      * @param string|null $append
      * @return string
      */
-    public function getDomainPath(string $append = null): string
+    public function getDomainPath(?string $append = null): string
     {
         $path = [
             $this->basePath,
@@ -273,7 +273,7 @@ class FileSystem
      * @throws FileNotFoundException
      * @throws LocaleFileNotFoundException
      */
-    public function updateLocale($localePath, $locale, $domain): bool
+    public function updateLocale($localePath, string $locale, string $domain): bool
     {
         $data = [
             $localePath,
@@ -302,7 +302,7 @@ class FileSystem
         );
 
         // Header replacement
-        $localeContents = preg_replace('/^([^#])+:?/', $newHeader, $localeContents);
+        $localeContents = preg_replace('/^([^#])+:?/', (string)$newHeader, $localeContents);
 
         if (!file_put_contents($localePOPath, $localeContents)) {
             throw new LocaleFileNotFoundException(

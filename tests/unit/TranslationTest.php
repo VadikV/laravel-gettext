@@ -20,15 +20,9 @@ class TranslationTest extends BaseTestCase
      * Base app path
      */
     protected string $appPath = __DIR__ . '/../../vendor/laravel/laravel/bootstrap/app.php';
-    /**
-     * @var FileSystem
-     */
-    protected $fileSystem;
 
-    /**
-     * @var Symfony
-     */
-    protected $translator;
+    protected FileSystem $fileSystem;
+    protected Symfony    $translator;
 
     protected function setUp(): void
     {
@@ -52,7 +46,7 @@ class TranslationTest extends BaseTestCase
     /**
      * View compiler tests
      */
-    public function testCompileViews()
+    public function testCompileViews(): void
     {
         $viewPaths = ['views'];
 
@@ -61,19 +55,19 @@ class TranslationTest extends BaseTestCase
 
     }
 
-    public function testFrenchTranslation()
+    public function testFrenchTranslation(): void
     {
         $string = $this->translator->setLocale('fr_FR')->translate('Controller string');
         $this->assertEquals('Chaine de caractère du controlleur', $string);
     }
 
-    public function testFrenchTranslationReplacement()
+    public function testFrenchTranslationReplacement(): void
     {
         $string = $this->translator->setLocale('fr_FR')->translate('Hello %s, how are you ?');
         $this->assertEquals('Salut %s, comment va ?', $string);
     }
 
-    public function testFrenchTranslationPluralNone()
+    public function testFrenchTranslationPluralNone(): void
     {
         $string = $this->translator->setLocale('fr_FR')
             ->translatePluralInline(
@@ -82,7 +76,7 @@ class TranslationTest extends BaseTestCase
         $this->assertEquals("Il n'y a pas de pommes", $string);
     }
 
-    public function testFrenchTranslationPluralOne()
+    public function testFrenchTranslationPluralOne(): void
     {
         $string = $this->translator->setLocale('fr_FR')
             ->translatePluralInline(
@@ -91,7 +85,7 @@ class TranslationTest extends BaseTestCase
         $this->assertEquals('Il y a une pomme', $string);
     }
 
-    public function testFrenchTranslationPluralMultiple()
+    public function testFrenchTranslationPluralMultiple(): void
     {
         $string = $this->translator->setLocale('fr_FR')
             ->translatePluralInline(
@@ -100,14 +94,14 @@ class TranslationTest extends BaseTestCase
         $this->assertEquals('Il y a 5 pommes', $string);
     }
 
-    public function testTranslatePluralSingle()
+    public function testTranslatePluralSingle(): void
     {
         $string = $this->translator->translatePlural('Il y a une pomme', 'Il y a %s pommes', 1);
 
         $this->assertEquals('Il y a une pomme', $string);
     }
 
-    public function testTranslatePluralMultiple()
+    public function testTranslatePluralMultiple(): void
     {
         $string = $this->translator->translatePlural('Il y a une pomme', 'Il y a %count% pommes', 5);
 

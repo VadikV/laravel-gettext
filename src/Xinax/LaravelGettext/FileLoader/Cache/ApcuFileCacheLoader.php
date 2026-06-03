@@ -36,7 +36,7 @@ class ApcuFileCacheLoader extends FileLoader
      *
      * @return string
      */
-    private function checksum($resource): string
+    private function checksum(string $resource): string
     {
         return filemtime($resource) . '-' . filesize($resource);
     }
@@ -61,7 +61,7 @@ class ApcuFileCacheLoader extends FileLoader
      *
      * @return void
      */
-    private function setCacheChecksum(string $resource, $checksum): void
+    private function setCacheChecksum(string $resource, string $checksum): void
     {
         apcu_store($resource . '-checksum', $checksum);
     }

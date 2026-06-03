@@ -51,11 +51,7 @@ class Symfony extends BaseTranslator
      */
     protected function getTranslator(): SymfonyTranslator
     {
-        if (isset($this->symfonyTranslator)) {
-            return $this->symfonyTranslator;
-        }
-
-        return $this->symfonyTranslator = $this->createTranslator();
+        return $this->symfonyTranslator ?? $this->symfonyTranslator = $this->createTranslator();
     }
 
     /**
@@ -66,6 +62,7 @@ class Symfony extends BaseTranslator
      *
      * @return $this
      */
+    #[\Override]
     public function setLocale(string $locale): static
     {
         parent::setLocale($locale);
@@ -89,6 +86,7 @@ class Symfony extends BaseTranslator
      * @return $this
      * @throws UndefinedDomainException
      */
+    #[\Override]
     public function setDomain(string $domain): static
     {
         parent::setDomain($domain);
@@ -186,6 +184,7 @@ class Symfony extends BaseTranslator
      *
      * @return bool
      */
+    #[\Override]
     public function isLocaleSupported(?string $locale): bool
     {
         if ($locale) {
@@ -198,6 +197,7 @@ class Symfony extends BaseTranslator
     /**
      * Return the current locale
      */
+    #[\Override]
     public function __toString(): string
     {
         return $this->getLocale();
@@ -208,6 +208,7 @@ class Symfony extends BaseTranslator
      *
      * @return array
      */
+    #[\Override]
     public function supportedLocales(): array
     {
         return $this->configuration->getSupportedLocales();

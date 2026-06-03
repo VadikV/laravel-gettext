@@ -29,10 +29,8 @@ class MoFileLoader extends FileLoader
 
     /**
      * The size of the header of a MO file in bytes.
-     *
-     * @var int Number of bytes
      */
-    private const MO_HEADER_SIZE = 28;
+    private const int MO_HEADER_SIZE = 28;
 
     /**
      * Parses machine object (MO) format, independent of the machine's endian it
@@ -92,7 +90,7 @@ class MoFileLoader extends FileLoader
             $singularId = fread($stream, $length);
 
             if (str_contains($singularId, "\000")) {
-                list($singularId, $pluralId) = explode("\000", $singularId);
+                [$singularId, $pluralId] = explode("\000", $singularId);
             }
 
             fseek($stream, $offsetTranslated + $i * 8);
@@ -142,6 +140,6 @@ class MoFileLoader extends FileLoader
         $result = unpack($isBigEndian ? 'N1' : 'V1', fread($stream, 4));
         $result = current($result);
 
-        return (int)substr($result, -8);
+        return (int)substr((string)$result, -8);
     }
 }

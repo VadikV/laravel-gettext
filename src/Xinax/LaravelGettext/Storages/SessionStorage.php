@@ -79,7 +79,7 @@ class SessionStorage implements Storage
      *
      * @return mixed
      */
-    protected function sessionGet($key, $default = null): mixed
+    protected function sessionGet(string $key, $default = null): mixed
     {
         $token = $this->configuration->getSessionIdentifier() . "-" . $key;
 
@@ -93,7 +93,7 @@ class SessionStorage implements Storage
      * @param $value
      * @return SessionStorage
      */
-    protected function sessionSet($key, $value): static
+    protected function sessionSet(string $key, $value): static
     {
         $token = $this->configuration->getSessionIdentifier() . "-" . $key;
         Session::put($token, $value);

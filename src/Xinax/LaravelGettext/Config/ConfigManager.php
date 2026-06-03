@@ -21,7 +21,7 @@ class ConfigManager
      * @param array|null $config
      * @throws RequiredConfigurationKeyException
      */
-    public function __construct(array $config = null)
+    public function __construct(?array $config = null)
     {
         $this->config = $config ? $this->generateFromArray($config) : new ConfigModel;
     }
